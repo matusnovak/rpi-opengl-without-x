@@ -10,7 +10,7 @@ The `triangle.c` contains comments which should explain to you all the necessary
 
 # What do I need?
 
-You need a GCC compiler and EGL and GLES library. If you are using the newest Raspbian distro, all those are already located on the image, no extra `apt-get` needed.
+You need a GCC compiler and EGL and GLES library. If you are using the newest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libEGL.so` and `libGLESv2.so`. They are all already included in the Jessie Raspbian!
 
 # How to I try it?
 
@@ -38,8 +38,24 @@ At the same time, a new file should be created: `output.raw`. This file contains
 
 ![Screenshot of a purple triangle](/../master/output.png?raw=true "Screenshot of a purple triangle")
 
-# Troubleshooting 
+# Troubleshooting and Questions
 
 **I get "Error! The glViewport/glGetIntegerv are not working! EGL might be faulty!" What should I do?**
 
 Your EGL might be faulty! Try reinstalling your Raspberry Pi OS.
+
+**How do I change the pixelbuffer resolution?**
+
+Find `pbufferAttribs` and change `EGL_WIDTH` and `EGL_HEIGHT`.
+
+**I get "undefined reference" on some gl functions!**
+
+Some GL functions may not come from GLES library. You may need to get GL1 library by executing `sudo apt-get install libgl1-mesa-dev` and then simply add: `-lGL` flag to the linker, so you get: `gcc -o triangle triangle.o -lEGL -lGLESv2 -lGL -L/opt/vc/lib`
+
+**How do I change the buffer sample size or the depth buffer size or the stencil size?**
+
+Find `configAttribs` at the top of the `triangle.c` file and modify the attributes you need. All config attributes are located here <https://www.khronos.org/registry/EGL/sdk/docs/man/html/eglChooseConfig.xhtml>
+
+**Can I use glBegin() and glEnd()?**
+
+You should not, but you can. However, it seems that OpenGL ES does not like that and nothing will be rendered.
