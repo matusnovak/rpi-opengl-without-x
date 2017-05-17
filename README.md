@@ -34,9 +34,9 @@ Initialized EGL version: 1.4
 GL Viewport size: 800x600
 ```
 
-At the same time, a new file should be created: `output.raw`. This file contains raw 800x600 RGB pixels. You can use Photoshop or any other software to import and view this file. You should be able to see the following purple triangle:
+At the same time, a new file should be created: `output.raw`. This file contains raw 800x600 RGB pixels. You can use Photoshop or any other software to import and view this file. You should be able to see the following purple triangle. Please note that the image is mirrored vertically as the pixel coordinates in OpenGL start from the bottom, not from the top.
 
-![Screenshot of a purple triangle](/../master/screenshot.png?raw=true "Screenshot of a purple triangle")
+![Screenshot of a purple triangle](/../master/output.png?raw=true "Screenshot of a purple triangle")
 
 # Troubleshooting 
 
