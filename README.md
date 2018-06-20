@@ -59,3 +59,7 @@ Find `configAttribs` at the top of the `triangle.c` file and modify the attribut
 **Can I use glBegin() and glEnd()?**
 
 You should not, but you can. However, it seems that OpenGL ES does not like that and nothing will be rendered.
+
+**failed to add service - already in use?**
+
+As mentioned in [this issue](https://github.com/matusnovak/rpi-opengl-without-x/issues/1), you have to remove both `vc4-kms-v3d` and `vc4-fkms-v3d` from [R-Pi config](https://elinux.org/R-Pi_configuration_file). Also relevant discussion here: <https://stackoverflow.com/questions/40490113/eglfs-on-raspberry2-failed-to-add-service-already-in-use>
