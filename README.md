@@ -1,4 +1,4 @@
-# OpenGL ES 2 rendering without an X server on Raspberry Pi using EGL
+# Raspberry Pi OpenGL ES 2 without an X server (using EGL)
 
 Have you ever wanted to render things with headless (no screen) Raspberry Pi? Then this is something you might be interested in! 
 
@@ -6,13 +6,22 @@ The following file `triangle.c` contains an example that renders a triangle and 
 
 The `triangle.c` contains comments which should explain to you all the necessary parts. Please note that this example will not teach you fundamentals of OpenGL! The purpose of this file is solely to demonstrate creating an OpenGL ES 2 context and getting the raw pixel output without using any virtual Linux framebuffers or physical screen (no X server).
 
-**Please note: Upgrading or downloading different EGL library other than the one distributed via Raspberry Pi distros may break your EGL! Do NOT run `apt-get install libegl1-mesa-dev`!**
+## Which Raspberry Pi works?
 
-# What do I need?
+* Raspberry Pi 1 (tested and works)
+* Raspberry Pi 2 (tested and works)
+* Raspberry Pi 3 (tested and works)
+* Raspberry Pi 4 (todo)
 
-You need a GCC compiler and EGL and GLES library. If you are using the newest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libEGL.so` and `libGLESv2.so`. They are all already included in the Jessie Raspbian!
+## What do I need?
 
-# How to I try it?
+You need a GCC compiler and EGL and GLES library. If you are using the latest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libEGL.so` and `libGLESv2.so`. They are all already included in the Jessie/Stretch/Buster Raspbian!
+
+## Lite (no Desktop) Raspbian:
+
+I was unsuccessful to install the EGL and GLES libraries on the Lite version. All my attempts resulted in a broken EGL library. The following packages `mesa-common-dev` and `libgl1-mesa-dev` **do NOT work** and instead they have broken my system. The only thing I can recommend is to install the full desktop version of Raspbian, then disable the X-server (see this stackoverflow post [here](https://raspberrypi.stackexchange.com/questions/1318/boot-without-starting-x-server)).
+
+## How to I try it?
 
 Copy or download the `triangle.c` file onto your Raspberry Pi. Using any terminal, write the following commands to compile the source file:
 
@@ -38,7 +47,11 @@ At the same time, a new file should be created: `output.raw`. This file contains
 
 ![Screenshot of a purple triangle](/../master/output.png?raw=true "Screenshot of a purple triangle")
 
-# Troubleshooting and Questions
+## Troubleshooting and Questions
+
+**Failed to get EGL version! Error:**
+
+Your EGL might be faulty! Try reinstalling your Raspberry Pi OS.
 
 **I get "Error! The glViewport/glGetIntegerv are not working! EGL might be faulty!" What should I do?**
 
@@ -60,6 +73,37 @@ Find `configAttribs` at the top of the `triangle.c` file and modify the attribut
 
 You should not, but you can. However, it seems that OpenGL ES does not like that and nothing will be rendered.
 
-**failed to add service - already in use?**
+**Failed to add service - already in use?**
 
 As mentioned in [this issue](https://github.com/matusnovak/rpi-opengl-without-x/issues/1), you have to remove both `vc4-kms-v3d` and `vc4-fkms-v3d` from [R-Pi config](https://elinux.org/R-Pi_configuration_file). Also relevant discussion here: <https://stackoverflow.com/questions/40490113/eglfs-on-raspberry2-failed-to-add-service-already-in-use>
+
+## License
+
+Do whatever you want.
+
+```
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
+```
