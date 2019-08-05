@@ -15,11 +15,11 @@ The `triangle.c` contains comments which should explain to you all the necessary
 
 ## What do I need?
 
-You need a GCC compiler and EGL and GLES library. If you are using the latest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libEGL.so` and `libGLESv2.so`. They are all already included in the Jessie/Stretch/Buster Raspbian!
+You need a GCC compiler and EGL and GLES library. If you are using the latest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libbrcmEGL.so` and `libbrcmGLESv2.so`. They are all already included in the Jessie/Stretch/Buster Raspbian! If you don't have `libbrcmEGL.so`, then you might have `libEGL.so` in the same folder.
 
-## Lite (no Desktop) Raspbian:
+## The problem of mesa apt package:
 
-I was unsuccessful to install the EGL and GLES libraries on the Lite version. All my attempts resulted in a broken EGL library. The following packages `mesa-common-dev` and `libgl1-mesa-dev` **do NOT work** and instead they have broken my system. The only thing I can recommend is to install the full desktop version of Raspbian, then disable the X-server (see this stackoverflow post [here](https://raspberrypi.stackexchange.com/questions/1318/boot-without-starting-x-server)).
+The following packages `mesa-common-dev` and `mesa-utils` **do NOT work** and instead they may break EGL on your operating system. The libraries installed through any of the `mesa` packages will install incompatible version of the EGL, most likely into `/lib/arm-linux-gnueabihf` folder. Don't use these! Use the ones provided by the official Raspbian OS image in the `/opt/vc/lib` folder!
 
 ## How to I try it?
 
@@ -27,7 +27,7 @@ Copy or download the `triangle.c` file onto your Raspberry Pi. Using any termina
 
 ```
 gcc -c triangle.c -o triangle.o -I/opt/vc/include
-gcc -o triangle triangle.o -lEGL -lGLESv2 -L/opt/vc/lib
+gcc -o triangle triangle.o -lbrcmEGL -lbrcmGLESv2 -L/opt/vc/lib
 ```
 
 To run the file, type the following:
@@ -51,11 +51,11 @@ At the same time, a new file should be created: `output.raw`. This file contains
 
 **Failed to get EGL version! Error:**
 
-Your EGL might be faulty! Try reinstalling your Raspberry Pi OS.
+Your EGL might be faulty! Make sure you are using the libraries provided by Raspbian and not the ones installed through apt-get or other package managers. Use the ones in the `/opt/vc/lib` folder. If that does not work, try reinstalling your Raspberry Pi OS.
 
 **I get "Error! The glViewport/glGetIntegerv are not working! EGL might be faulty!" What should I do?**
 
-Your EGL might be faulty! Try reinstalling your Raspberry Pi OS.
+Same as above.
 
 **How do I change the pixelbuffer resolution?**
 
@@ -63,7 +63,7 @@ Find `pbufferAttribs` and change `EGL_WIDTH` and `EGL_HEIGHT`.
 
 **I get "undefined reference" on some gl functions!**
 
-Some GL functions may not come from GLES library. You may need to get GL1 library by executing `sudo apt-get install libgl1-mesa-dev` and then simply add: `-lGL` flag to the linker, so you get: `gcc -o triangle triangle.o -lEGL -lGLESv2 -lGL -L/opt/vc/lib`
+Some GL functions may not come from GLES library. You may need to get GL1 library by executing `sudo apt-get install libgl1-mesa-dev` and then simply add: `-lGL` flag to the linker, so you get: `gcc -o triangle triangle.o -lbrcmEGL -lbrcmGLESv2 -lGL -L/opt/vc/lib`
 
 **How do I change the buffer sample size or the depth buffer size or the stencil size?**
 
