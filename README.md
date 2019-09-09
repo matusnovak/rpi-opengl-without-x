@@ -11,17 +11,21 @@ The `triangle.c` contains comments which should explain to you all the necessary
 * Raspberry Pi 1 (tested and works)
 * Raspberry Pi 2 (tested and works)
 * Raspberry Pi 3 (tested and works)
-* Raspberry Pi 4 (todo)
+* Raspberry Pi 4 (tested and works, but won't work in headless mode, you need a HDMI output)
 
-## What do I need?
+## Raspberry Pi 1,2,3
+
+*For the Raspberry Pi 4 instructions see the next section*
+
+**What do I need?**
 
 You need a GCC compiler and EGL and GLES library. If you are using the latest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libbrcmEGL.so` and `libbrcmGLESv2.so`. They are all already included in the Jessie/Stretch/Buster Raspbian! If you don't have `libbrcmEGL.so`, then you might have `libEGL.so` in the same folder.
 
-## The problem of mesa apt package:
+**The problem of mesa apt package**
 
 The following packages `mesa-common-dev` and `mesa-utils` **do NOT work** and instead they may break EGL on your operating system. The libraries installed through any of the `mesa` packages will install incompatible version of the EGL, most likely into `/lib/arm-linux-gnueabihf` folder. Don't use these! Use the ones provided by the official Raspbian OS image in the `/opt/vc/lib` folder!
 
-## How to I try it?
+**How to I try it?**
 
 Copy or download the `triangle.c` file onto your Raspberry Pi. Using any terminal, write the following commands to compile the source file:
 
@@ -30,7 +34,7 @@ gcc -c triangle.c -o triangle.o -I/opt/vc/include
 gcc -o triangle triangle.o -lbrcmEGL -lbrcmGLESv2 -L/opt/vc/lib
 ```
 
-To run the file, type the following:
+To run the executable, type the following:
 
 ```
 ./triangle
@@ -43,9 +47,60 @@ Initialized EGL version: 1.4
 GL Viewport size: 800x600
 ```
 
-At the same time, a new file should be created: `output.raw`. This file contains raw 800x600 RGB pixels. You can use Photoshop or any other software to import and view this file. You should be able to see the following purple triangle. Please note that the image is mirrored vertically as the pixel coordinates in OpenGL start from the bottom, not from the top.
+At the same time, a new file should be created: `output.raw`. This file contains raw 800x600 RGB pixels. You can use Photoshop or any other software to import and view this file. You should be able to see the following purple triangle. Please note that the image is mirrored vertically as the pixel coordinates in OpenGL start from the bottom, not from the top. Example of the image:
 
-![Screenshot of a purple triangle](/../master/output.png?raw=true "Screenshot of a purple triangle")
+![Screenshot of a purple triangle](output.png "Screenshot of a purple triangle")
+
+## Raspberry Pi 4
+
+Raspberry Pi 4, at the moment of writing this, has no full KMS driver, because the GPU is different from the previous ones. Instead of using the `vc` libraries, you will need to use the DRM/GBM.
+
+**What do I need?**
+
+You need a GCC compiler, GDM, EGL, and GLES library. The GCC compiler is already included in the Raspbian image. To install the other libraries, simply run:
+
+```bash
+sudo apt-get install libegl1-mesa-dev libgbm-dev libgles2-mesa-dev
+```
+
+You will also need to connect your Raspberry Pi to a screen. The boot config from `/boot/config.txt` that I have used for my tests, if it helps in any way:
+
+```bash
+dtoverlay=vc4-fkms-v3d
+max_framebuffers=2
+hdmi_force_hotplug=1
+hdmi_group=2
+hdmi_mode=81
+```
+
+**How to I try it?**
+
+Copy or download the `triangle_rpi4.c` file onto your Raspberry Pi. Using any terminal, write the following commands to compile the source file:
+
+```
+gcc -o triangle_rpi4 triangle_rpi4.c -ldrm -lgbm -lEGL -lGLESv2 -I/usr/include/libdrm -I/usr/include/GLES2
+```
+
+To run the executable, type the following:
+
+```
+./triangle_rpi4
+```
+
+You should see the following output:
+
+```
+resolution: 1366x768
+Initialized EGL version: 1.4
+GL Viewport size: 1366x768
+```
+
+Note! The resolution depends on the screen you are using!
+
+At the same time, a new file should be created: `output.raw`. This file contains raw 1366x768 RGB pixels. You can use Photoshop or any other software to import and view this file. You should be able to see the following purple triangle. Please note that the image is mirrored vertically as the pixel coordinates in OpenGL start from the bottom, not from the top. Example of the image:
+
+![Screenshot of a purple triangle](output.png "Screenshot of a purple triangle")
+
 
 ## Troubleshooting and Questions
 
@@ -71,11 +126,11 @@ Find `configAttribs` at the top of the `triangle.c` file and modify the attribut
 
 **Can I use glBegin() and glEnd()?**
 
-You should not, but you can. However, it seems that OpenGL ES does not like that and nothing will be rendered.
+You should not, but you can. However, it seems that OpenGL ES does not like that and nothing will be rendered. For this you will need to link the `GL` library as well. Simply, add `-lGL` to the gcc command.
 
 **Failed to add service - already in use?**
 
-As mentioned in [this issue](https://github.com/matusnovak/rpi-opengl-without-x/issues/1), you have to remove both `vc4-kms-v3d` and `vc4-fkms-v3d` from [R-Pi config](https://elinux.org/R-Pi_configuration_file). Also relevant discussion here: <https://stackoverflow.com/questions/40490113/eglfs-on-raspberry2-failed-to-add-service-already-in-use>
+As mentioned in [this issue](https://github.com/matusnovak/rpi-opengl-without-x/issues/1), you have to remove both `vc4-kms-v3d` and `vc4-fkms-v3d` from [R-Pi config](https://elinux.org/R-Pi_configuration_file). Also relevant discussion here: <https://stackoverflow.com/questions/40490113/eglfs-on-raspberry2-failed-to-add-service-already-in-use>. If you are using Raspberry Pi 4 (the `triangle_rpi4.c`) it might happen sometimes. I could not fully figure it out, but it might be due to incorrect EGL or DRM/GBM cleanup in  the code. I say "incorrect", but I don't know where. 
 
 ## License
 

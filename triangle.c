@@ -19,7 +19,11 @@ static const EGLint configAttribs[] = {
 
 // Width and height of the desired framebuffer
 static const EGLint pbufferAttribs[] = {
-    EGL_WIDTH, 800, EGL_HEIGHT, 600, EGL_NONE,
+    EGL_WIDTH,
+    800,
+    EGL_HEIGHT,
+    600,
+    EGL_NONE,
 };
 
 static const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -28,7 +32,15 @@ static const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2,
 // The following array holds vec3 data of
 // three vertex positions
 static const GLfloat vertices[] = {
-    -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+    -1.0f,
+    -1.0f,
+    0.0f,
+    1.0f,
+    -1.0f,
+    0.0f,
+    0.0f,
+    1.0f,
+    0.0f,
 };
 
 // The following are GLSL shaders for rendering a triangle on the screen
@@ -39,8 +51,10 @@ static const char *vertexShaderCode = STRINGIFY(
 static const char *fragmentShaderCode =
     STRINGIFY(uniform vec4 color; void main() { gl_FragColor = vec4(color); });
 
-static const char *eglGetErrorStr() {
-    switch (eglGetError()) {
+static const char *eglGetErrorStr()
+{
+    switch (eglGetError())
+    {
     case EGL_SUCCESS:
         return "The last function succeeded without error.";
     case EGL_NOT_INITIALIZED:
@@ -90,22 +104,25 @@ static const char *eglGetErrorStr() {
     return "Unknown error!";
 }
 
-int main(int argv, char **argc) {
+int main(int argv, char **argc)
+{
     EGLDisplay display;
     int major, minor;
     int desiredWidth, desiredHeight;
     GLuint program, vert, frag, vbo;
     GLint posLoc, colorLoc, result;
 
-    if ((display = eglGetDisplay(EGL_DEFAULT_DISPLAY)) == EGL_NO_DISPLAY) {
+    if ((display = eglGetDisplay(EGL_DEFAULT_DISPLAY)) == EGL_NO_DISPLAY)
+    {
         fprintf(stderr, "Failed to get EGL display! Error: %s\n",
-                eglGetErrorStr);
+                eglGetErrorStr());
         return EXIT_FAILURE;
     }
 
-    if (eglInitialize(display, &major, &minor) == EGL_FALSE) {
+    if (eglInitialize(display, &major, &minor) == EGL_FALSE)
+    {
         fprintf(stderr, "Failed to get EGL version! Error: %s\n",
-                eglGetErrorStr);
+                eglGetErrorStr());
         eglTerminate(display);
         return EXIT_FAILURE;
     }
@@ -114,18 +131,20 @@ int main(int argv, char **argc) {
 
     EGLint numConfigs;
     EGLConfig config;
-    if (!eglChooseConfig(display, configAttribs, &config, 1, &numConfigs)) {
+    if (!eglChooseConfig(display, configAttribs, &config, 1, &numConfigs))
+    {
         fprintf(stderr, "Failed to get EGL config! Error: %s\n",
-                eglGetErrorStr);
+                eglGetErrorStr());
         eglTerminate(display);
         return EXIT_FAILURE;
     }
 
     EGLSurface surface =
         eglCreatePbufferSurface(display, config, pbufferAttribs);
-    if (surface == EGL_NO_SURFACE) {
+    if (surface == EGL_NO_SURFACE)
+    {
         fprintf(stderr, "Failed to create EGL surface! Error: %s\n",
-                eglGetErrorStr);
+                eglGetErrorStr());
         eglTerminate(display);
         return EXIT_FAILURE;
     }
@@ -134,9 +153,10 @@ int main(int argv, char **argc) {
 
     EGLContext context =
         eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttribs);
-    if (context == EGL_NO_CONTEXT) {
+    if (context == EGL_NO_CONTEXT)
+    {
         fprintf(stderr, "Failed to create EGL context! Error: %s\n",
-                eglGetErrorStr);
+                eglGetErrorStr());
         eglDestroySurface(display, surface);
         eglTerminate(display);
         return EXIT_FAILURE;
@@ -165,7 +185,8 @@ int main(int argv, char **argc) {
 
     // Test if the desired width and height match the one returned by
     // glGetIntegerv
-    if (desiredWidth != viewport[2] || desiredHeight != viewport[3]) {
+    if (desiredWidth != viewport[2] || desiredHeight != viewport[3])
+    {
         fprintf(stderr, "Error! The glViewport/glGetIntegerv are not working! "
                         "EGL might be faulty!\n");
     }
@@ -224,10 +245,13 @@ int main(int argv, char **argc) {
 
     // Write all pixels to file
     FILE *output = fopen("triangle.raw", "wb");
-    if (output) {
+    if (output)
+    {
         fwrite(buffer, 1, desiredWidth * desiredHeight * 3, output);
         fclose(output);
-    } else {
+    }
+    else
+    {
         fprintf(stderr, "Failed to open file triangle.raw for writing!\n");
     }
 
