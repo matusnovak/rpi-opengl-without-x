@@ -36,7 +36,7 @@ static drmModeConnector *getConnector(drmModeRes *resources)
     return NULL;
 }
 
-static drmModeEncoder *findEncoder(drmModeRes *resources, drmModeConnector *connector)
+static drmModeEncoder *findEncoder(drmModeConnector *connector)
 {
     if (connector->encoder_id)
     {
@@ -66,7 +66,7 @@ static int getDisplay(EGLDisplay *display)
     mode = connector->modes[0];
     printf("resolution: %ix%i\n", mode.hdisplay, mode.vdisplay);
 
-    drmModeEncoder *encoder = findEncoder(resources, connector);
+    drmModeEncoder *encoder = findEncoder(connector);
     if (connector == NULL)
     {
         fprintf(stderr, "Unable to get encoder\n");
