@@ -67,7 +67,7 @@ static int getDisplay(EGLDisplay *display)
     printf("resolution: %ix%i\n", mode.hdisplay, mode.vdisplay);
 
     drmModeEncoder *encoder = findEncoder(resources, connector);
-    if (connector == NULL)
+    if (encoder == NULL)
     {
         fprintf(stderr, "Unable to get encoder\n");
         drmModeFreeConnector(connector);
