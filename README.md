@@ -11,7 +11,7 @@ The `triangle.c` contains comments which should explain to you all the necessary
 * Raspberry Pi 1 (tested and works)
 * Raspberry Pi 2 (tested and works)
 * Raspberry Pi 3 (tested and works)
-* Raspberry Pi 4 (tested and works, but won't work in headless mode, you need a HDMI output)
+* Raspberry Pi 4 (tested and works, ~~but won't work in headless mode, you need a HDMI output~~ works just fine in the headless mode, no longer true, see issue [#11](https://github.com/matusnovak/rpi-opengl-without-x/issues/11))
 
 ## Raspberry Pi 1,2,3
 
@@ -94,8 +94,6 @@ resolution: 1366x768
 Initialized EGL version: 1.4
 GL Viewport size: 1366x768
 ```
-
-Note! The resolution depends on the screen you are using!
 
 At the same time, a new file should be created: `output.raw`. This file contains raw 1366x768 RGB pixels. You can use Photoshop or any other software to import and view this file. You should be able to see the following purple triangle. Please note that the image is mirrored vertically as the pixel coordinates in OpenGL start from the bottom, not from the top. Example of the image:
 
