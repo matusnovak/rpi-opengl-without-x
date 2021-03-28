@@ -2,9 +2,9 @@
 
 Have you ever wanted to render things with headless (no screen) Raspberry Pi? Then this is something you might be interested in! 
 
-The following file `triangle.c` contains an example that renders a triangle and saves it into a `output.raw` file. The example uses EGL to create a pixel buffer as a surface. Normally, when using X server, you would create a window surface. The example also uses OpenGL ES 2 to setup a very simple shader to render a triangle.
+The following file `triangle.c` contains an example that renders a triangle and saves it into a `output.raw` file. The example uses EGL to create a pixel buffer as a surface. Normally, when using X server, you would create a window surface, but in here we do not do that at all. This example also uses OpenGL ES 2 to setup a very simple shader to render a triangle.
 
-The `triangle.c` contains comments which should explain to you all the necessary parts. Please note that this example will not teach you fundamentals of OpenGL! The purpose of this file is solely to demonstrate creating an OpenGL ES 2 context and getting the raw pixel output without using any virtual Linux framebuffers or physical screen (no X server).
+The `triangle.c` contains comments which should explain you all the necessary parts. Please note that this example will not teach you fundamentals of OpenGL! The purpose of this file is solely to demonstrate creating an OpenGL ES 2 context and getting the raw pixel output without using any virtual Linux framebuffers or physical screen (no X server).
 
 ## Which Raspberry Pi works?
 
@@ -19,15 +19,15 @@ The `triangle.c` contains comments which should explain to you all the necessary
 
 **What do I need?**
 
-You need a GCC compiler and EGL and GLES library. If you are using the latest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the gcc installed by executing `gcc --version`. You can also check if GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libbrcmEGL.so` and `libbrcmGLESv2.so`. They are all already included in the Jessie/Stretch/Buster Raspbian! If you don't have `libbrcmEGL.so`, then you might have `libEGL.so` in the same folder.
+You need a GCC compiler, EGL, and GLES libraries. If you are using the latest Raspbian distro, all those are already located on the image, no extra `apt-get` needed. You can check if you have the GCC installed by executing `gcc --version`. You can also check if the GLES and EGL are installed by executing `ls /opt/vc/lib` which should list `libbrcmEGL.so` and `libbrcmGLESv2.so`. They are all already included in the Jessie/Stretch/Buster Raspbian! If you don't have `libbrcmEGL.so`, you will have to use the `libEGL.so` instead, which is located in the same folder.
 
 **The problem of mesa apt package**
 
-The following packages `mesa-common-dev` and `mesa-utils` **do NOT work** and instead they may break EGL on your operating system. The libraries installed through any of the `mesa` packages will install incompatible version of the EGL, most likely into `/lib/arm-linux-gnueabihf` folder. Don't use these! Use the ones provided by the official Raspbian OS image in the `/opt/vc/lib` folder!
+The following packages `mesa-common-dev` and `mesa-utils` **do NOT work** and instead they may break EGL on your OS. The libraries installed through any of the `mesa` packages will install incompatible version of the EGL, most likely into the `/lib/arm-linux-gnueabihf` folder. Don't use these! Use the ones provided by the official Raspbian OS image in the `/opt/vc/lib` folder!
 
-**How to I try it?**
+**How do I try it?**
 
-Copy or download the `triangle.c` file onto your Raspberry Pi. Using any terminal, write the following commands to compile the source file:
+Copy or download the `triangle.c` file onto your Raspberry Pi. Use the following commands to compile the source file:
 
 ```
 gcc -c triangle.c -o triangle.o -I/opt/vc/include
@@ -57,7 +57,7 @@ Raspberry Pi 4, at the moment of writing this, has no full KMS driver, because t
 
 **What do I need?**
 
-You need a GCC compiler, GDM, EGL, and GLES library. The GCC compiler is already included in the Raspbian image. To install the other libraries, simply run:
+You need a GCC compiler, GDM, EGL, and GLES libraries. The GCC compiler is already included in the Raspbian image. To install the other libraries, simply run:
 
 ```bash
 sudo apt-get install libegl1-mesa-dev libgbm-dev libgles2-mesa-dev
@@ -73,7 +73,7 @@ hdmi_group=2
 hdmi_mode=81
 ```
 
-**How to I try it?**
+**How do I try it?**
 
 Copy or download the `triangle_rpi4.c` file onto your Raspberry Pi. Using any terminal, write the following commands to compile the source file:
 
